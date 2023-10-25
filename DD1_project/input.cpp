@@ -6,65 +6,86 @@
 using namespace std;
 set<char> vars;
 
-void variables(string f, string flag)
+void variables(string f)
 {
     istringstream stream(f);
     string temp;
     regex pattern("[a-zA-Z]");
-    if(flag == "SoP")
+    while(getline(stream, temp, '+'))
     {
-        while(getline(stream, temp, '+'))
+        for(char index : temp)
         {
-            for(char index : temp)
+            string charAsString(1,index);
+            if(regex_match(charAsString,pattern))
             {
-                string charAsString(1,index);
-                if(regex_match(charAsString,pattern))
-                {
-                    vars.insert(index);
-                }
+                vars.insert(index);
             }
         }
     }
-    else if(flag == "PoS")
-    {
-        
-    }
-    for(char i : vars)
-    {
-        cout << i << endl;
-    }
+    // for(char i : vars)
+    // {
+    //     cout << i << endl;
+    // }
 }
 
-void SoP(string f)
+bool SoP(string f)
 {
     regex pattern("[a-zA-Z]('|[a-zA-Z]|\\s*\\+\\s*?[a-zA-Z]|\\s*)*"); //I still need to consider the cases with brakets
     if(regex_match(f,pattern))
     {
-        cout << "Match found!" << endl;
-        variables(f,"SoP");
+        variables(f);
+        return 1;
     }
     else
     {
-        cout << "Match not found!" << endl;
+        return 0;
     }
 }
 
-void PoS(string f)
+bool PoS(string f)
 {
-    regex pattern("([a-zA-Z](\\s*\\+\\s*[a-zA-Z])*)|(\\([a-zA-Z](\\s*\\+\\s*[a-zA-Z])*\\))+");
+    regex pattern("([a-zA-Z]((\\s*\\+\\s*[a-zA-Z])|')*)|(\\([a-zA-Z]((\\s*\\+\\s*[a-zA-Z])|')*\\))+");
     if(regex_match(f,pattern))
     {
-        cout << "Match found!" << endl;
+        variables(f);
+        return 1;
     }
     else
     {
-        cout << "Match not found!" << endl;
+        return 0;
+    }
+}
+
+bool checkValidity(string f)
+{
+    if(!SoP(f))
+    {
+        if(!PoS(f))
+        {
+            cout << "Invalid Input!" << endl;
+            return 0;
+        }
+        else
+        {
+            cout << "The function you entered is in PoS form" << endl;
+            return 1;
+        }
+    }
+    else
+    {
+        cout << "The function you entered is in SoP form" << endl;
+        return 1;
     }
 }
 
 int main()
 {
-    string s="a";
-    SoP(s);
-
+    string f;
+    bool flag=0;
+    while(!flag)
+    {
+        cout << "Enter your function in SoP or PoS form: ";
+        cin  >> f;
+        flag=checkValidity(f);
+    }
 }
