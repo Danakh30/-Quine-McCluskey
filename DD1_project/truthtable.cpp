@@ -5,13 +5,14 @@
 void generateTT()
 {
     vector<vector<bool>> table(vars.size(),vector<bool>(pow(2,vars.size())));
-    for(int i=0; i<vars.size(); i++) //just needs to be filled backward
+    int columns = vars.size();
+    for(int i=0; i<columns; i++) 
     {
         int j = 0;
-        bool bin = false;
-        while(j<pow(2,vars.size()))
+        bool bin = 0;
+        while(j<pow(2,columns))
         {
-            for(int k=0; k<pow(2,i); k++)
+            for(int k=0; k<pow(2,columns-i-1); k++)
             {
                 table[i][j]=bin;
                 ++j;
@@ -24,9 +25,9 @@ void generateTT()
         cout << it << "\t";
     }
     cout << endl;
-    for(int i=0; i<pow(2,vars.size()); i++)
+    for(int i=0; i<pow(2,columns); i++)
     {
-        for(int j=0; j<vars.size(); j++)
+        for(int j=0; j<columns; j++)
         {
             cout << table[j][i] << '\t';
         }
