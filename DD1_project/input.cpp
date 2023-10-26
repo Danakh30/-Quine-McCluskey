@@ -8,6 +8,7 @@ set<char> vars;
 
 void variables(string f)
 {
+    f.erase(remove_if(f.begin(),f.end(),::isspace),f.end());
     istringstream stream(f);
     string temp;
     regex pattern("[a-zA-Z]");
@@ -78,14 +79,14 @@ bool checkValidity(string f)
     }
 }
 
-int main()
-{
-    string f;
-    bool flag=0;
-    while(!flag)
-    {
-        cout << "Enter your function in SoP or PoS form: ";
-        cin  >> f;
-        flag=checkValidity(f);
-    }
-}
+// int main()
+// {
+//     string f;
+//     bool flag=0;
+//     while(!flag)
+//     {
+//         cout << "Enter your function in SoP or PoS form: ";
+//         getline(cin, f);
+//         flag=checkValidity(f);
+//     }
+// }
