@@ -5,8 +5,9 @@
 #include<set>
 using namespace std;
 set<char> vars;
+string f;
 
-void variables(string f)
+void variables()
 {
     f.erase(remove_if(f.begin(),f.end(),::isspace),f.end());
     istringstream stream(f);
@@ -29,12 +30,12 @@ void variables(string f)
     // }
 }
 
-bool SoP(string f)
+bool SoP()
 {
     regex pattern("[a-zA-Z]('|[a-zA-Z]|\\s*\\+\\s*?[a-zA-Z]|\\s*)*"); //I still need to consider the cases with brakets
     if(regex_match(f,pattern))
     {
-        variables(f);
+        variables();
         return 1;
     }
     else
@@ -43,12 +44,12 @@ bool SoP(string f)
     }
 }
 
-bool PoS(string f)
+bool PoS()
 {
     regex pattern("([a-zA-Z]((\\s*\\+\\s*[a-zA-Z])|')*)|(\\([a-zA-Z]((\\s*\\+\\s*[a-zA-Z])|')*\\))+");
     if(regex_match(f,pattern))
     {
-        variables(f);
+        variables();
         return 1;
     }
     else
@@ -57,11 +58,11 @@ bool PoS(string f)
     }
 }
 
-bool checkValidity(string f)
+bool checkValidity()
 {
-    if(!SoP(f))
+    if(!SoP())
     {
-        if(!PoS(f))
+        if(!PoS())
         {
             cout << "Invalid Input!" << endl;
             return 0;
@@ -81,12 +82,11 @@ bool checkValidity(string f)
 
 // int main()
 // {
-//     string f;
 //     bool flag=0;
 //     while(!flag)
 //     {
 //         cout << "Enter your function in SoP or PoS form: ";
 //         getline(cin, f);
-//         flag=checkValidity(f);
+//         flag=checkValidity();
 //     }
 // }
