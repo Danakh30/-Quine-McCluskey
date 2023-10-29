@@ -10,6 +10,12 @@ string f;
 void variables()
 {
     f.erase(remove_if(f.begin(),f.end(),::isspace),f.end());
+    size_t found = f.find("\'\'");
+    while(found != string::npos)
+    {
+        f.erase(found,2);
+        found = f.find("\'\'");
+    }
     istringstream stream(f);
     string temp;
     regex pattern("[a-zA-Z]");

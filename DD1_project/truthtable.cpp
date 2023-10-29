@@ -31,42 +31,31 @@ void fillSoP()
     set<string> new_columns;
     while(getline(stream, temp, '+'))
     {
-        for(int i=0; i<temp.size()-1; i++)
+        size_t found = temp.find("\'");
+        while(found != string::npos)
         {
-            if(temp[i+1] == '\'')
-            {
-                temp1 = temp[i];
-                while(temp[i+1] == '\'')
-                {
-                    temp1+=temp[i+1];
-                    i++;
-                }
-                new_columns.insert(temp1);
-            }
+            new_columns.insert(temp.substr(found-1,2));
+            found = temp.find("\'", found + 1);
         }
     }
 
     for(auto i : new_columns)
     {
-        for(int j=1; j<i.size(); j++)
+        for(auto j : values[to_string(i[0])])
         {
-            temp1=i.substr(0,j+1);
-            for(auto k : values[temp1.substr(0,temp1.size()-1)])
-            {
-                values[temp1].push_back(!k);
-            }
+            values[i].push_back(!j);
         }
     }
 
-    for(auto it = values.begin(); it!= values.end(); it++)
-    {
-        cout << it-> first << '\t';
-        for(int j=0; j<it->second.size(); j++)
-        {
-            cout << it->second[j] << ' ';
-        }
-        cout << endl;
-    }
+    // for(auto it = values.begin(); it!= values.end(); it++)
+    // {
+    //     cout << it-> first << '\t';
+    //     for(int j=0; j<it->second.size(); j++)
+    //     {
+    //         cout << it->second[j] << ' ';
+    //     }
+    //     cout << endl;
+    // }
 }
 
 void generateTT()
@@ -96,16 +85,7 @@ void generateTT()
         }
         i++;
     }
-
-    // for(auto it = values.begin(); it!= values.end(); it++)
-    // {
-    //     cout << it-> first << '\t';
-    //     for(int j=0; j<it->second.size(); j++)
-    //     {
-    //         cout << it->second[j] << ' ';
-    //     }
-    //     cout << endl;
-    // }
+    printTT(table);
 }
 
 int main()
