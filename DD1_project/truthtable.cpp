@@ -2,7 +2,7 @@
 #include<vector>
 #include<cmath>
 #include<unordered_map>
-unordered_map<char, vector<bool>> values;
+unordered_map<string, vector<bool>> values;
 
 void printTT(vector<vector<bool>> table)
 {
@@ -48,7 +48,24 @@ void fillSoP()
 
     for(auto i : new_columns)
     {
-        
+        for(int j=1; j<i.size(); j++)
+        {
+            temp1=i.substr(0,j+1);
+            for(auto k : values[temp1.substr(0,temp1.size()-1)])
+            {
+                values[temp1].push_back(!k);
+            }
+        }
+    }
+
+    for(auto it = values.begin(); it!= values.end(); it++)
+    {
+        cout << it-> first << '\t';
+        for(int j=0; j<it->second.size(); j++)
+        {
+            cout << it->second[j] << ' ';
+        }
+        cout << endl;
     }
 }
 
@@ -75,7 +92,7 @@ void generateTT()
     {
         for(int j=0; j<pow(2,columns); j++)
         {
-            values[it].push_back(table[i][j]);
+            values[to_string(it)].push_back(table[i][j]);
         }
         i++;
     }
