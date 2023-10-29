@@ -47,8 +47,3 @@ int main()
     }
     generateTT();
 }
-
-
-
-//Khalil make sth that will return the number of variables (please)
-//!
