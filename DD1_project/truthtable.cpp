@@ -61,7 +61,6 @@ void fillSoP()
 void generateTT()
 {
     vector<vector<bool>> table(vars.size()+1,vector<bool>(pow(2,vars.size())+1));
-    vector<vector<bool>> table(vars.size()+1,vector<bool>(pow(2,vars.size())+1));
     int columns = vars.size();
     for(int i=0; i<columns; i++) 
     {
@@ -77,7 +76,6 @@ void generateTT()
             bin=!bin;
         }
     }
-    int i=0;
     int i=0;
     for(char it : vars)
     {
@@ -98,9 +96,7 @@ int main()
         cout << "Enter your function in SoP or PoS form: ";
         getline(cin, f);
         flag=checkValidity();
-        flag=checkValidity();
     }
     generateTT();
-    fillSoP();
     fillSoP();
 }
