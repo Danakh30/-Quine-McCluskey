@@ -26,8 +26,8 @@ void printTT(vector<vector<bool>> table)
 void fillSoP()
 {
     istringstream stream(f);
-    string temp, temp1;
-    bool result;
+    string temp;
+    bool result, temp1;
     set<string> new_columns;
     while(getline(stream, temp, '+'))
     {
@@ -41,21 +41,66 @@ void fillSoP()
 
     for(auto i : new_columns)
     {
-        for(auto j : values[to_string(i[0])])
+        for(auto j : values[string(1,i[0])])
         {
             values[i].push_back(!j);
         }
     }
+    vector<string> terms;
+    istringstream stream2(f);
+    while(getline(stream2 ,temp, '+'))
+    {
+        terms.clear();
+        for(int i=0; i<temp.size(); i++)
+        {
+            if(i!=temp.size()-1)
+            {
+                if(temp[i+1]=='\'')
+                {
+                    terms.push_back(temp.substr(i,2));
+                    i++;
+                }
+                else
+                {
+                    terms.push_back(string(1,temp[i]));
+                }
+            }
+            else
+            {
+                terms.push_back(string(1,temp[i]));
+            }
+        }
+        for(int i=0; i<pow(2,vars.size()); i++)
+        {
+            temp1 = 1;
+            for(auto j : terms)
+            {
+                temp1 = temp1 && values[j][i];
+            }
+            values[temp].push_back(temp1);
+        }
+    }
 
-    // for(auto it = values.begin(); it!= values.end(); it++)
-    // {
-    //     cout << it-> first << '\t';
-    //     for(int j=0; j<it->second.size(); j++)
-    //     {
-    //         cout << it->second[j] << ' ';
-    //     }
-    //     cout << endl;
-    // }
+    for(int i=0; i<pow(2,vars.size()); i++)
+    {
+        istringstream stream3(f);
+        result=0;
+        while(getline(stream3, temp, '+'))
+        {
+            result = result || values[temp][i];
+        }
+        values["f"].push_back(result);
+    }
+
+    for(auto it = values.begin(); it!= values.end(); it++)
+    {
+        cout << it-> first << '\t';
+        for(int j=0; j<it->second.size(); j++)
+        {
+            cout << it->second[j] << ' ';
+        }
+        cout << endl;
+    }
 }
 
 void generateTT()
@@ -81,11 +126,11 @@ void generateTT()
     {
         for(int j=0; j<pow(2,columns); j++)
         {
-            values[to_string(it)].push_back(table[i][j]);
+            values[string(1,it)].push_back(table[i][j]);
         }
         i++;
     }
-    printTT(table);
+    //printTT(table);
 }
 
 int main()
