@@ -1,9 +1,4 @@
-    // for(auto it = values.begin(); it!= values.end(); it++)
+    // for(int i=0; i<pow(2,columns); i++)
     // {
-    //     cout << it-> first << '\t';
-    //     for(int j=0; j<it->second.size(); j++)
-    //     {
-    //         cout << it->second[j] << ' ';
-    //     }
-    //     cout << endl;
+    //     table[columns-1].push_back(values[f][i]);
     // }

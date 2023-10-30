@@ -15,7 +15,7 @@ void printTT(vector<vector<bool>> table)
 
     for(int i=0; i<pow(2,columns); i++)
     {
-        for(int j=0; j<columns; j++)
+        for(int j=0; j<columns+1; j++)
         {
             cout << table[j][i] << '\t';
         }
@@ -130,7 +130,17 @@ void generateTT()
         }
         i++;
     }
-    //printTT(table);
+    fillSoP();
+    for(int i=0; i<pow(2,columns); i++)
+    {
+        table[columns][i]=values["f"][i];
+    }
+    printTT(table);
+}
+
+void transformToSoP()
+{
+    
 }
 
 int main()
@@ -143,5 +153,4 @@ int main()
         flag=checkValidity();
     }
     generateTT();
-    fillSoP();
 }
