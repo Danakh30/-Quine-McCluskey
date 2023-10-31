@@ -305,163 +305,36 @@ set<string>  transformToBoolian(set<char> vars, pi_group pi) {
 }
 
 
-int countOnesInBinary(const string& binary) {
-    return count(binary.begin(), binary.end(), '1');
-}
-
-
-pi selectCheapestImplicant(const pi_group& implicants) {
-    pi cheapestImplicant;
-    int maxMinterms = -1;
-    int maxOnes = -1;
-
-    for (const pi& implicant : implicants) {
-        int minterms = implicant.first.size();
-        int ones = countOnesInBinary(implicant.second);
-
-        if (minterms > maxMinterms || (minterms == maxMinterms && ones > maxOnes)) {
-            maxMinterms = minterms;
-            maxOnes = ones;
-            cheapestImplicant = implicant;
+// Custom comparison function for sorting by the number of covered minterms
+// Custom comparison function for sorting by coverage, total implicants, and binary representation
+struct ComparePrimeImplicants {
+    bool operator()(const pair<pi, int>& lhs, const pair<pi, int>& rhs) const {
+        // Compare by coverage
+        if (lhs.second != rhs.second) {
+            return lhs.second > rhs.second;
         }
-    }
-
-    return cheapestImplicant;
-}
-
-
-
-int calculateScore(const pi& implicant) {
-    
-    int mintermScore = implicant.first.size();
-
-    return mintermScore;
-}
-
-pi_group findNonEssentialCoveringAllMinterms(const pi_group& nonEssential, const set<int>& uncoveredMinterms) {
-    pi_group selectedImplicants;
-    set<int> remainingUncoveredMinterms = uncoveredMinterms;
-    int previousRemainingCount = remainingUncoveredMinterms.size(); // Initialize previous count
-
-    while (!remainingUncoveredMinterms.empty()) {
-        int maxScore = -1;
-        pi_group maxScoreImplicants;
-
-        // Iterate through non-essential prime implicants to calculate their scores
-        for (const pi& nonEssentialPI : nonEssential) {
-            int score = calculateScore(nonEssentialPI);
-
-            if (score > maxScore) {
-                maxScore = score;
-                maxScoreImplicants.clear();
-                maxScoreImplicants.insert(nonEssentialPI);
-            }
-            else if (score == maxScore) {
-                maxScoreImplicants.insert(nonEssentialPI);
-            }
+        // If coverage is the same, compare by total implicants
+        int lhsTotalImplicants = lhs.first.first.size();
+        int rhsTotalImplicants = rhs.first.first.size();
+        if (lhsTotalImplicants != rhsTotalImplicants) {
+            return lhsTotalImplicants > rhsTotalImplicants;
         }
-
-        if (maxScoreImplicants.empty()) {
-            // If no implicants with the maximum score were found, exit the loop
-            break;
-        }
-
-        pi selectedImplicant = selectCheapestImplicant(maxScoreImplicants);
-        selectedImplicants.insert(selectedImplicant);
-
-        for (int minterm : selectedImplicant.first) {
-            remainingUncoveredMinterms.erase(minterm);
-        }
-
-        if (remainingUncoveredMinterms.size() == previousRemainingCount) {
-            // If no progress is being made, exit the loop to avoid infinite loop
-            break;
-        }
-
-        previousRemainingCount = remainingUncoveredMinterms.size();
-    }
-
-    return selectedImplicants;
-}
-
-
-
-
-
-
-
-
-//pi_group findNonEssentialCoveringAllMinterms(const pi_group& nonEssential, const set<int>& uncoveredMinterms) {
-//
-//    set<int> remainingUPI = uncoveredMinterms;
-//    pi_group selectedImplicants;
-//
-//    while (!remainingUPI.empty()) {
-//
-//        int maxScore = -1;
-//
-//
-//        // Iterate through non - essential prime implicants to calculate their scores
-//            for (const pi& nonEssentialPI : nonEssential) {
-//                int score = calculateScore(nonEssentialPI);
-//
-//                if (score > maxScore) {
-//                    maxScore = score;
-//                    maxScoreImplicants.clear();
-//                    maxScoreImplicants.insert(nonEssentialPI);
-//                }
-//                else if (score == maxScore) {
-//                    maxScoreImplicants.insert(nonEssentialPI);
-//                }
-//            }
-//
-//        //iterating through the non essential prime implicants:
-//        for (const pi& nonEssentialPI : nonEssential) {
-//            if (score > maxScore) {
-//                //we also need to check before we clear that the elements we are deleting do not contain uncovered implicants that are not covered by nonEssential
-//                selectedImplicants.clear();
-//                selectedImplicants.insert(nonEssentialPI);
-//            }
-//        
-//        }
-//
-//
-//
-//    }
-//
-//}
-
-// Custom comparison function for the priority queue
-struct ComparePI {
-    bool operator()(const pi& lhs, const pi& rhs) const {
-        // 1. Compare by the number of minterms covered (largest set first)
-        if (lhs.first.size() != rhs.first.size()) {
-            return lhs.first.size() < rhs.first.size();
-        }
-
-        // 2. If the number of minterms covered is the same, compare by the overall number of implicants
-        if (lhs.first.size() == rhs.first.size()) {
-            int lhsImplicantCount = count(lhs.second.begin(), lhs.second.end(), '1');
-            int rhsImplicantCount = count(rhs.second.begin(), rhs.second.end(), '1');
-            if (lhsImplicantCount != rhsImplicantCount) {
-                return lhsImplicantCount < rhsImplicantCount;
-            }
-        }
-
-        // 3. If both the set size and the number of implicants are the same, compare by the binary representation
-        return lhs.second < rhs.second;
+        // If total implicants are the same, compare by the number of 1's in binary representation
+        int lhsOnesCount = count(lhs.first.second.begin(), lhs.first.second.end(), '1');
+        int rhsOnesCount = count(rhs.first.second.begin(), rhs.first.second.end(), '1');
+        return lhsOnesCount > rhsOnesCount;
     }
 };
 
-// Helper function that returns a priority queue of prime implicants based on the conditions
-priority_queue<pi, vector<pi>, ComparePI> prioritizePI(const pi_group& nonEssential, const set<int>& uncoveredMinterms) {
-    // Initialize the priority queue with the custom comparison function
-    priority_queue<pi, vector<pi>, ComparePI> pq;
+// Function to sort and return a vector of prime implicants based on coverage, total implicants, and binary representation
+vector<pair<pi, int>> sortPrimeImplicants(const pi_group& nonEssential, const set<int>& uncoveredMinterms) {
+    vector<pair<pi, int>> sortedPIs;
 
     // Iterate through non-essential prime implicants
     for (const pi& nonEssentialPI : nonEssential) {
-        // Calculate the count of uncovered minterms covered by this implicant
         int countCovered = 0;
+
+        // Calculate the count of uncovered minterms covered by this implicant
         for (int minterm : nonEssentialPI.first) {
             if (uncoveredMinterms.find(minterm) != uncoveredMinterms.end()) {
                 countCovered++;
@@ -469,38 +342,52 @@ priority_queue<pi, vector<pi>, ComparePI> prioritizePI(const pi_group& nonEssent
         }
 
         // Only insert implicants that cover at least one uncovered minterm
-         if (countCovered > 0) {
-            pq.push(nonEssentialPI);
+        if (countCovered > 0) {
+            sortedPIs.push_back(make_pair(nonEssentialPI, countCovered));
         }
     }
 
-    return pq;
+    // Sort the vector based on the custom comparison function
+    sort(sortedPIs.begin(), sortedPIs.end(), ComparePrimeImplicants());
+
+    return sortedPIs;
 }
 
 
 
+// Function to select prime implicants one by one, remove covered minterms, and create a vector of selected prime implicants
+vector<pi> selectPrimeImplicants(const pi_group& nonEssential, set<int> uncoveredMinterms) {
+    vector<pi> selectedPIs;
+    vector<pair<pi, int>> sortedPIs = sortPrimeImplicants(nonEssential, uncoveredMinterms);
 
+    while (!uncoveredMinterms.empty() && !sortedPIs.empty()) {
+        // Select the prime implicant with the highest priority
+        const pi& selectedImplicant = sortedPIs[0].first;
+        int coverage = sortedPIs[0].second;
 
+        // Add the selected implicant to the list of selected implicants
+        selectedPIs.push_back(selectedImplicant);
 
+        // Remove the minterms covered by the selected implicant from the set of uncovered minterms
+        for (const auto& minterm : selectedImplicant.first) {
+            auto it = uncoveredMinterms.find(minterm);
+            if (it != uncoveredMinterms.end()) {
+                uncoveredMinterms.erase(it);
+            }
 
+            
+        }
 
+        // Update the vector of sorted prime implicants
+        sortedPIs = sortPrimeImplicants(nonEssential, uncoveredMinterms);
+    }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    return selectedPIs;
+}
+//this function selects prime implicants until there are no uncovered minterms left.
+//The function returns a vector of selected prime implicants based on the specified conditions.
+//Each iteration selects the highest - priority prime implicant, removes the covered minterms, 
+//and updates the list of sorted prime implicants for the next iteration.
 
 int main() {
 
@@ -553,34 +440,18 @@ int main() {
     }
 
 
-    //// Find non-essential prime implicants covering all uncovered minterms
-    //pi_group selectedImplicants = findNonEssentialCoveringAllMinterms(nonEssentialPrimeImplicants, uncoveredMintermsSet);
+     //vector<pair<pi, int>> sortedPIs = sortPrimeImplicants(nonEssentialPrimeImplicants, uncoveredMintermsSet);
 
+    vector<pi> selectedPIs = selectPrimeImplicants(nonEssentialPrimeImplicants, uncoveredMintermsSet);
 
-    //// Print the selected non-essential prime implicants represented by minterms
-    //cout << "Selected Non-Essential Prime Implicants:" << endl;
-    //for (const pi& selectedImplicant : selectedImplicants) {
-    //    cout << "Minterms: ";
-    //    for (int minterm : selectedImplicant.first) {
-    //        cout << minterm << ' ';
-    //    }
-    //    cout << " (Binary: " << selectedImplicant.second << ")" << endl;
-    //}
-
-
-    priority_queue<pi, vector<pi>, ComparePI> pq = prioritizePI(nonEssentialPrimeImplicants, uncoveredMintermsSet);
-
-    // Now, the priority queue `pq` contains prime implicants ordered according to the specified conditions
-    while (!pq.empty()) {
-        pi topPI = pq.top();
-        cout << "Binary Representation: " << topPI.second << " | Minterms: ";
-        for (int minterm : topPI.first) {
+    // Print the selected prime implicants
+    cout << "Selected Prime Implicants:" << endl;
+    for (const pi& selectedImplicant : selectedPIs) {
+        for (int minterm : selectedImplicant.first) {
             cout << minterm << ' ';
         }
-        cout << endl;
-        pq.pop();
+        cout << " (" << selectedImplicant.second << ")" << endl;
     }
-
     return 0;
 }
     
