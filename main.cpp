@@ -305,6 +305,45 @@ set<string>  transformToBoolian(set<char> vars, pi_group pi) {
 }
 
 
+
+//the same function as above but takes in a vector (for the set of selected non prime implicants)
+std::set<std::string> transformToBooleanVec(const std::set<char>& vars, const std::vector<pi>& piVector) {
+    std::set<std::string> epi;
+
+    for (const pi& p : piVector) {
+        std::string val = p.second;
+        std::string term = "";
+
+        for (char var : vars) {
+            if (val.empty()) {
+                break; // Stop if there are no more characters in val
+            }
+
+            if (val[0] == '1') {
+                term = term + var;
+            }
+            else if (val[0] == '0') {
+                term = term + var + "'";
+            }
+
+            val = val.substr(1);
+
+            if (!val.empty() && val[0] == '-') {
+                val = val.substr(1); // Skip '-' character
+            }
+        }
+
+        if (!term.empty()) {
+            epi.insert(term);
+        }
+    }
+
+    return epi;
+}
+
+
+
+
 // Custom comparison function for sorting by the number of covered minterms
 // Custom comparison function for sorting by coverage, total implicants, and binary representation
 struct ComparePrimeImplicants {
@@ -389,6 +428,29 @@ vector<pi> selectPrimeImplicants(const pi_group& nonEssential, set<int> uncovere
 //Each iteration selects the highest - priority prime implicant, removes the covered minterms, 
 //and updates the list of sorted prime implicants for the next iteration.
 
+
+
+//the final functio that will give you the optamized boolian function
+string finalBoolianFunction(pi_group ePI, pi_group nEPI , vector<pi> neededPI, set<int> uncoveredMintermsSet, set<char> vars) {
+    
+    set<string>epii = transformToBoolian(vars, ePI);
+    set<string>nepii = transformToBooleanVec(vars, neededPI);
+
+
+    string bf = "";
+    for (const auto& imp : epii) {
+        bf = bf + imp + " + ";
+    }
+
+    vector<pi> selectedPIs = selectPrimeImplicants(nEPI, uncoveredMintermsSet);
+    for (const auto& imp : nepii) {
+        bf = bf + imp + " + ";
+    }
+    
+    return bf.substr(0, bf.size() - 2);
+
+}
+
 int main() {
 
     set<char>vars = { 'A','B','C','D','E' };
@@ -452,6 +514,10 @@ int main() {
         }
         cout << " (" << selectedImplicant.second << ")" << endl;
     }
+
+        //testing the printing of the final funtion
+    cout << "final function will look like : ";
+    cout << finalBoolianFunction(essentialPrimeImplicants, nonEssentialPrimeImplicants, selectedPIs, uncoveredMintermsSet, vars);
     return 0;
 }
     
