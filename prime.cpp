@@ -140,17 +140,3 @@ void printPIS(vector<pi> PrimeImplicants)
 }
 }
 
-
-
-
-int main() {
-auto pimyn= generate_PI({0,2,3,8,10,16,17,18,19,21,24,26},5);
-for(auto p:pimyn)
-{
-    for(auto d: p.first) {
-        cout << d << ' ';
-    }
-    cout << '\n';
-}
-  return 0;
-}
