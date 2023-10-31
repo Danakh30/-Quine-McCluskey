@@ -15,7 +15,10 @@ This code is designed to perform the following tasks:
 3. [`epi_printer`](#epi_printer): Print the essential prime implicants.
 4. [`nonEPI_extractor`](#nonEPI_extractor): Extract non-essential prime implicants from the original set.
 5. [`uncoveredMinterms`](#uncoveredMinterms): Determine the set of uncovered minterms.
-6. [`transformToBoolian`](#transformToBoolian): Transform a set of prime implicants into a set of Boolean terms.
+6. [`transformToBoolian`](#transformToBoolian) and [`transformToBooleanVec`](#transformToBooleanVec): Transform a set of prime implicants into a set of Boolean terms depending on the input (one takes in a set of PI and the other a vector of PI depending on the need).
+7. [`sortPrimeImplicants`](#sortPrimeImplicants): sorts the prime implicants in a verctor depending on certain characteristics
+8. [`selectPrimeImplicants`](#selectPrimeImplicants): immitates a coverage chart and pick the non essential prime implicants which covers the minterms left uncovered by the EPI based on priority.
+9. [`finalBooleanFunction`](#finalBooleanFunction): generates the final optimized boolian function.
 
 ## Functions
 
@@ -39,11 +42,67 @@ The `nonEPI_extractor` function extracts non-essential prime implicants from the
 
 This function determines the set of uncovered minterms by comparing the minterms covered by non-essential prime implicants with those covered by essential prime implicants. It returns a set of minterms that are not covered by the essential prime implicants.
 
-### `transformToBoolian`
+###  `transformToBoolian` and `transformToBooleanVec`
 
-The `transformToBoolian` function converts a set of prime implicants into a set of Boolean terms. It takes a set of variables (`vars`) and a `pi_group` of prime implicants. It generates a set of Boolean terms representing the prime implicants, where each term is a string consisting of variables and their complements.
+These functions take a set of variables and a set of prime implicants as input and transform them into Boolean expressions. The first function, `transformToBoolian`, works with a set of prime implicants, while the second function, `transformToBooleanVec`, works with a vector of prime implicants.
 
-## Example Usage
+- Input:
+  - `vars`: A set of characters representing the variables.
+  - `piVector`: A vector of prime implicants or a set of prime implicants.
+  
+- Output:
+  - A set of strings, each representing a Boolean term.
+
+These functions iterate through the prime implicants, evaluate their binary representations, and generate corresponding Boolean terms. The output is a set of strings representing Boolean expressions for the provided prime implicants.
+
+###  `sortPrimeImplicants`
+
+This function sorts prime implicants based on specific criteria:
+
+- Priority is determined by the number of minterms covered.
+- If two prime implicants have the same coverage, they are compared based on the total number of implicants they contain.
+- If the total number of implicants is also the same, the comparison considers the number of 1's in their binary representations.
+
+- Input:
+  - `nonEssential`: A group of non-essential prime implicants.
+  - `uncoveredMinterms`: A set of uncovered minterms.
+  
+- Output:
+  - A vector of pairs containing prime implicants and their coverage scores.
+
+### `selectPrimeImplicants`
+
+This function selects prime implicants one by one, removes covered minterms, and creates a vector of selected prime implicants. It continues this process until there are no uncovered minterms left.
+
+- Input:
+  - `nonEssential`: A group of non-essential prime implicants.
+  - `uncoveredMinterms`: A set of uncovered minterms.
+  
+- Output:
+  - A vector of selected prime implicants.
+
+This function utilizes `sortPrimeImplicants` to select prime implicants according to the specified conditions. The selected prime implicants are returned as a vector.
+
+### . `finalBooleanFunction`
+
+This function generates the optimized Boolean function based on essential prime implicants (EPI), non-essential prime implicants (non-EPI), and selected prime implicants.
+
+- Input:
+  - `ePI`: A group of essential prime implicants.
+  - `nEPI`: A group of non-essential prime implicants.
+  - `neededPI`: A vector of selected prime implicants.
+  - `uncoveredMintermsSet`: A set of uncovered minterms.
+  - `vars`: A set of characters representing the variables.
+  
+- Output:
+  - An optimized Boolean expression.
+
+The function generates an optimized Boolean expression by transforming EPI, non-EPI, and selected prime implicants into Boolean terms and combining them with logical OR operators.
+
+This program facilitates the simplification and optimization of Boolean functions by minimizing the number of required terms while considering coverage and other criteria. It allows for a more efficient representation of Boolean expressions.
+
+
+### Example Usage
 
 Here's an example of how you can use these functions:
 
@@ -68,6 +127,14 @@ set<int> uncovered = uncoveredMinterms(nonEssentialPI, epis);
 
 // Transform prime implicants into Boolean terms
 set<string> booleanTerms = transformToBoolian(vars, primeImplicants);
+set<string>nepii = transformToBooleanVec(vars, neededPI);
+
+//coverage chart of NEPI
+vector<pi> selectedPIs = selectPrimeImplicants(nonEssentialPrimeImplicants, uncoveredMintermsSet);
+
+//final boolian expression
+cout << finalBoolianFunction(essentialPrimeImplicants, nonEssentialPrimeImplicants, selectedPIs, uncoveredMintermsSet, vars);
+
+
 ```
 
-Please make sure to adapt the code and functions to your specific use case and data.
