@@ -5,8 +5,56 @@
 #include<algorithm>
 unordered_map<string, vector<bool>> values;
 
+void generateChanonical(vector<vector<bool>> table)
+{
+    string SoP="", PoS="";
+    for(int i=0; i<pow(2,vars.size()); i++)
+    {
+        if(values["f"][i]==1)
+        {
+            if(SoP != ""){SoP += " + ";}
+            for(auto j : vars)
+            {
+                if(values[string(1,j)][i] == 1)
+                {
+                    SoP += string(1,j);
+                }
+                else
+                {
+                    SoP += string(1,j);
+                    SoP += "'";
+                }
+            }
+        }
+        else
+        {
+            PoS += "(";
+            int count=0;
+            for(auto j : vars)
+            {
+                count ++;
+                if(values[string(1,j)][i] == 0)
+                {
+                    PoS += string(1,j);
+                    if(count != vars.size()){PoS += " + ";}
+                }
+                else
+                {
+                    PoS += string(1,j);
+                    PoS += "'";
+                    if(count != vars.size()){PoS += " + ";}
+                }
+            }
+            PoS += ")";
+        }
+    }
+    cout << "Chanoninal SoP: " << SoP << endl;
+    cout << "Chanonical PoS: " << PoS << endl;
+}
+
 void printTT(vector<vector<bool>> table)
 {
+    cout << "--------------Truth Table--------------" << endl;
     int columns = vars.size();
     for(char it : vars)
     {
@@ -138,7 +186,7 @@ void fillPoS()
     fillSoP(1);   
 }
 
-void generateTT()
+void generateTT(string flag)
 {
     vector<vector<bool>> table(vars.size()+1,vector<bool>(pow(2,vars.size())+1));
     int columns = vars.size();
@@ -165,24 +213,24 @@ void generateTT()
         }
         i++;
     }
-    //fillSoP();
-    fillPoS();
+    if(flag == "SoP"){fillSoP(0);}
+    else{fillPoS();}
     for(int i=0; i<pow(2,columns); i++)
     {
         table[columns][i]=values["f"][i];
     }
     printTT(table);
+    generateChanonical(table);
 }
 
 int main()
 {
-    bool flag=0;
-    while(!flag)
+    string flag="0";
+    while(flag == "0")
     {
         cout << "Enter your function in SoP or PoS form: ";
         getline(cin, f);
         flag=checkValidity();
     }
-    generateTT();
-    //fillPoS();
+    generateTT(flag);
 }

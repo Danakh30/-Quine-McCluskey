@@ -64,25 +64,25 @@ bool PoS()
     }
 }
 
-bool checkValidity()
+string checkValidity()
 {
     if(!SoP())
     {
         if(!PoS())
         {
             cout << "Invalid Input!" << endl;
-            return 0;
+            return "0";
         }
         else
         {
             cout << "The function you entered is in PoS form" << endl;
-            return 1;
+            return "PoS";
         }
     }
     else
     {
         cout << "The function you entered is in SoP form" << endl;
-        return 1;
+        return "SoP";
     }
 }
 
