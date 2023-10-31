@@ -2,6 +2,7 @@
 #include<vector>
 #include<cmath>
 #include<unordered_map>
+#include<algorithm>
 unordered_map<string, vector<bool>> values;
 
 void printTT(vector<vector<bool>> table)
@@ -23,7 +24,7 @@ void printTT(vector<vector<bool>> table)
     }
 }
 
-void fillSoP()
+void fillSoP(bool flag)
 {
     istringstream stream(f);
     string temp;
@@ -89,18 +90,52 @@ void fillSoP()
         {
             result = result || values[temp][i];
         }
-        values["f"].push_back(result);
+        if(!flag){values["f"].push_back(result);}
+        else{values["f"].push_back(!result);}
     }
 
-    for(auto it = values.begin(); it!= values.end(); it++)
+    // for(auto it = values.begin(); it!= values.end(); it++)
+    // {
+    //     cout << it-> first << '\t';
+    //     for(int j=0; j<it->second.size(); j++)
+    //     {
+    //         cout << it->second[j] << ' ';
+    //     }
+    //     cout << endl;
+    // }
+}
+
+void fillPoS()
+{
+    string temp;
+    vector<string> terms;
+    if(f[0] == '(')
     {
-        cout << it-> first << '\t';
-        for(int j=0; j<it->second.size(); j++)
+        f.erase(remove(f.begin(), f.end(), '('), f.end());
+        istringstream stream(f);
+        while(getline(stream, temp, ')'))
         {
-            cout << it->second[j] << ' ';
+            terms.push_back(temp);
         }
-        cout << endl;
     }
+    f.clear();
+    for(int i=0; i<terms.size(); i++)
+    {
+        replace(terms[i].begin(), terms[i].end(), '+', '\'');
+        f += terms[i];
+        f += "'";
+        if(i != terms.size()-1)
+        {
+            f+= "+";
+        } 
+    }
+    size_t found = f.find("\'\'");
+    while(found != string::npos)
+    {
+        f.erase(found,2);
+        found = f.find("\'\'");
+    }
+    fillSoP(1);   
 }
 
 void generateTT()
@@ -130,17 +165,13 @@ void generateTT()
         }
         i++;
     }
-    fillSoP();
+    //fillSoP();
+    fillPoS();
     for(int i=0; i<pow(2,columns); i++)
     {
         table[columns][i]=values["f"][i];
     }
     printTT(table);
-}
-
-void transformToSoP()
-{
-    
 }
 
 int main()
@@ -153,4 +184,5 @@ int main()
         flag=checkValidity();
     }
     generateTT();
+    //fillPoS();
 }
