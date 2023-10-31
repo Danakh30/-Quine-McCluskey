@@ -4,12 +4,29 @@
 #include<unordered_map>
 #include<algorithm>
 unordered_map<string, vector<bool>> values;
+vector<int> minterms;
+
+int binToDecimal(string bin)
+{
+    int decimal = 0;
+    int power = 0;
+    for (int i = bin.length() - 1; i >= 0; --i) 
+    {
+        if (bin[i] == '1') {
+            decimal += static_cast<int>(pow(2, power));
+        }
+        power++;
+    }
+    return decimal;
+}
 
 void generateChanonical(vector<vector<bool>> table)
 {
     string SoP="", PoS="";
+    int decimal;
     for(int i=0; i<pow(2,vars.size()); i++)
     {
+        string bin="";
         if(values["f"][i]==1)
         {
             if(SoP != ""){SoP += " + ";}
@@ -18,13 +35,18 @@ void generateChanonical(vector<vector<bool>> table)
                 if(values[string(1,j)][i] == 1)
                 {
                     SoP += string(1,j);
+                    bin += "1";
                 }
                 else
                 {
                     SoP += string(1,j);
                     SoP += "'";
+                    bin += "0";
                 }
             }
+            decimal = binToDecimal(bin);
+            minterms.push_back(decimal);
+
         }
         else
         {
@@ -48,6 +70,11 @@ void generateChanonical(vector<vector<bool>> table)
             PoS += ")";
         }
     }
+    for(auto i : minterms)
+    {
+        cout << i << '\t';
+    }
+    cout << endl;
     cout << "Chanoninal SoP: " << SoP << endl;
     cout << "Chanonical PoS: " << PoS << endl;
 }
@@ -141,16 +168,6 @@ void fillSoP(bool flag)
         if(!flag){values["f"].push_back(result);}
         else{values["f"].push_back(!result);}
     }
-
-    // for(auto it = values.begin(); it!= values.end(); it++)
-    // {
-    //     cout << it-> first << '\t';
-    //     for(int j=0; j<it->second.size(); j++)
-    //     {
-    //         cout << it->second[j] << ' ';
-    //     }
-    //     cout << endl;
-    // }
 }
 
 void fillPoS()
@@ -223,14 +240,14 @@ void generateTT(string flag)
     generateChanonical(table);
 }
 
-// int main()
-// {
-//     string flag="0";
-//     while(flag == "0")
-//     {
-//         cout << "Enter your function in SoP or PoS form: ";
-//         getline(cin, f);
-//         flag=checkValidity();
-//     }
-//     generateTT(flag);
-// }
+int main()
+{
+    string flag="0";
+    while(flag == "0")
+    {
+        cout << "Enter your function in SoP or PoS form: ";
+        getline(cin, f);
+        flag=checkValidity();
+    }
+    generateTT(flag);
+}

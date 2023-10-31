@@ -1,6 +1,5 @@
 #include"truthtable.cpp"
-#include <fstream>
-#include<iostream>
+#include<fstream>
 using namespace std;
 
 bool isNegated(int index, const string& str)

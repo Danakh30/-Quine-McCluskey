@@ -30,10 +30,6 @@ void variables()
             }
         }
     }
-    // for(char i : vars)
-    // {
-    //     cout << i << endl;
-    // }
 }
 
 bool SoP()
@@ -85,14 +81,3 @@ string checkValidity()
         return "SoP";
     }
 }
-
-// int main()
-// {
-//     bool flag=0;
-//     while(!flag)
-//     {
-//         cout << "Enter your function in SoP or PoS form: ";
-//         getline(cin, f);
-//         flag=checkValidity();
-//     }
-// }
