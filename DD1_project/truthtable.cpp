@@ -223,14 +223,14 @@ void generateTT(string flag)
     generateChanonical(table);
 }
 
-int main()
-{
-    string flag="0";
-    while(flag == "0")
-    {
-        cout << "Enter your function in SoP or PoS form: ";
-        getline(cin, f);
-        flag=checkValidity();
-    }
-    generateTT(flag);
-}
+// int main()
+// {
+//     string flag="0";
+//     while(flag == "0")
+//     {
+//         cout << "Enter your function in SoP or PoS form: ";
+//         getline(cin, f);
+//         flag=checkValidity();
+//     }
+//     generateTT(flag);
+// }
