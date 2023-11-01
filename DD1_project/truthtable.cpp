@@ -1,8 +1,5 @@
 #include"input.cpp"
-#include<vector>
-#include<cmath>
-#include<unordered_map>
-#include<algorithm>
+
 unordered_map<string, vector<bool>> values;
 vector<int> minterms;
 
@@ -69,10 +66,6 @@ void generateChanonical(vector<vector<bool>> table)
             }
             PoS += ")";
         }
-    }
-    for(auto i : minterms)
-    {
-        cout << i << '\t';
     }
     cout << endl;
     cout << "Chanoninal SoP: " << SoP << endl;
@@ -240,14 +233,14 @@ void generateTT(string flag)
     generateChanonical(table);
 }
 
-int main()
-{
-    string flag="0";
-    while(flag == "0")
-    {
-        cout << "Enter your function in SoP or PoS form: ";
-        getline(cin, f);
-        flag=checkValidity();
-    }
-    generateTT(flag);
-}
+// int main()
+// {
+//     string flag="0";
+//     while(flag == "0")
+//     {
+//         cout << "Enter your function in SoP or PoS form: ";
+//         getline(cin, f);
+//         flag=checkValidity();
+//     }
+//     generateTT(flag);
+// }

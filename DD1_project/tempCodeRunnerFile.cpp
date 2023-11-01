@@ -1,4 +1,4 @@
-    // for(int i=0; i<pow(2,columns); i++)
-    // {
-    //     table[columns-1].push_back(values[f][i]);
-    // }
+
+    "(A  B'  C  D'  E') + (A'  B  C'  D  E)",
+    "P'  Q  R  S  + P  Q'  R'+ S T U",
+    "A  B + A'  B +  A  C'",

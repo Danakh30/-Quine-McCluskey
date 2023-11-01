@@ -3,6 +3,13 @@
 #include<string>
 #include<sstream>
 #include<set>
+#include <unordered_set>
+#include <map>
+#include <bitset>
+#include<vector>
+#include<cmath>
+#include<unordered_map>
+#include<algorithm>
 using namespace std;
 set<char> vars;
 string f;

@@ -1,4 +1,4 @@
-#include"truthtable.cpp"
+#include"PrimeManip.cpp"
 #include<fstream>
 using namespace std;
 
@@ -53,9 +53,8 @@ string create_script(vector<string> sop)
     return script;
 }
 
-int main() 
+void circuit(vector<string> sop) 
 {
-    vector<string> sop = {"abc","a'd"};
     ofstream htmlFile("circuit.html");
     string script = create_script(sop);
     if (htmlFile.is_open()) 
@@ -77,5 +76,4 @@ int main()
     } else {
         cerr << "Unable to create the file." << endl;
     }
-    return 0;
 }

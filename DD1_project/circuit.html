@@ -5,8 +5,20 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/wavedrom/3.1.0/wavedrom.min.js" type="text/javascript"></script>
 </head>
 <body onload="WaveDrom.ProcessAll()"><script type="WaveDrom"> { assign: [["out",["|",
-["&", "a", "b", "c"]
+["&", ["~", "A"], ["~", "B"], ["~", "C"]]
 ,
-["&", ["~", "a"], "d"]
+["&", ["~", "A"], "B", "C"]
+,
+["&", ["~", "B"], "C", ["~", "P"], "Q"]
+,
+["&", ["~", "B"], "C", "P", ["~", "Q"]]
+,
+["&", ["~", "A"], "C", ["~", "P"]]
+,
+["&", ["~", "A"], ["~", "P"], "Q"]
+,
+["&", "A", "B", ["~", "C"], "Q"]
+,
+["&", "B", ["~", "C"], "P", ["~", "Q"]]
 ]]]}</script></body>
 </html>
