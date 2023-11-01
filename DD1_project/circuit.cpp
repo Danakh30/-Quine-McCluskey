@@ -53,27 +53,46 @@ string create_script(vector<string> sop)
     return script;
 }
 
-void circuit(vector<string> sop) 
+// void circuit(vector<string> sop) 
+// {
+//     ofstream htmlFile("circuit.html");
+//     string script = create_script(sop);
+//     if (htmlFile.is_open()) 
+//     {
+//         htmlFile << "<!DOCTYPE html>\n";
+//         htmlFile << "<html>\n";
+//         htmlFile << "<head>\n";
+//         htmlFile << "<script src=\"https://cdnjs.cloudflare.com/ajax/libs/wavedrom/3.1.0/skins/default.js\" type=\"text/javascript\"></script>\n";
+//         htmlFile << "<script src=\"https://cdnjs.cloudflare.com/ajax/libs/wavedrom/3.1.0/wavedrom.min.js\" type=\"text/javascript\"></script>\n";
+//         htmlFile << "</head>\n";
+//         htmlFile << "<body onload=\"WaveDrom.ProcessAll()\">";
+//         htmlFile << "<script type=\"WaveDrom\">" << script;
+//         htmlFile << "</script>";
+//         htmlFile << "</body>\n";
+//         htmlFile << "</html>\n";
+
+//         htmlFile.close();
+//         cout << "HTML file created successfully!" << endl;
+//     } else {
+//         cerr << "Unable to create the file." << endl;
+//     }
+// }
+void circuit(vector<string> sop)
 {
-    ofstream htmlFile("circuit.html");
+    ofstream htmlFile("circuit.html", ofstream::app);
+
     string script = create_script(sop);
-    if (htmlFile.is_open()) 
+    if (htmlFile.is_open())
     {
-        htmlFile << "<!DOCTYPE html>\n";
-        htmlFile << "<html>\n";
-        htmlFile << "<head>\n";
-        htmlFile << "<script src=\"https://cdnjs.cloudflare.com/ajax/libs/wavedrom/3.1.0/skins/default.js\" type=\"text/javascript\"></script>\n";
-        htmlFile << "<script src=\"https://cdnjs.cloudflare.com/ajax/libs/wavedrom/3.1.0/wavedrom.min.js\" type=\"text/javascript\"></script>\n";
-        htmlFile << "</head>\n";
-        htmlFile << "<body onload=\"WaveDrom.ProcessAll()\">";
         htmlFile << "<script type=\"WaveDrom\">" << script;
         htmlFile << "</script>";
-        htmlFile << "</body>\n";
-        htmlFile << "</html>\n";
+        htmlFile << "<hr>";
 
         htmlFile.close();
-        cout << "HTML file created successfully!" << endl;
-    } else {
-        cerr << "Unable to create the file." << endl;
+        cout << "Circuit appended to HTML file successfully!" << endl;
+    }
+    else
+    {
+        cerr << "Unable to open the file for appending." << endl;
     }
 }

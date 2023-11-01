@@ -4,19 +4,21 @@
 
 int main() {
 
-std::vector<std::string> logicalExpressions = {\
-    "(A' + B)(A + B')",\
-    "(P + Q)(P' + Q')",\
-    "(A' + B + C')(A' + B' + C)",\
-    "P'Q + PQ' + PQ",\
-    "(A' + B + C)(A + B' + C' + D')",\
-    "(P  Q'  R) + (P'  Q  R') + (P  Q  R  S')",\
-    "(A  B'  C  D'  E') + (A'  B  C'  D  E)",\
-    "P'  Q  R  S  + P  Q'  R'+ S T U",\
-    "A  B + A'  B +  A  C'",\
-    "(A' + B + C)(P' + Q')"};
+std::vector<std::string> logicalExpressions = {
+    "(a'+b)(a+b')",
+    "(P+Q)(P'+Q')",
+    "(A'+B+C')(A'+B'+C)",
+    "P'Q + PQ' + PQ",
+    "(A' + B + C)(A + B' + C' + D')",
+    "(P  Q'  R) + (P'  Q  R') + (P  Q  R  S')",
+    "(A  B'  C  D'  E') + (A'  B  C'  D  E)",
+    "P'  Q  R  S  + P  Q'  R'+ S T U",
+    "A  B + A'  B +  A  C'",
+    "x'''y + z'x + abcd"};
 
-    for (const std::string& expr : logicalExpressions){
+    for (auto expr : logicalExpressions)
+    {
+        vars.clear();
         string flag = "0";
        // while (flag == "0")
         // {
