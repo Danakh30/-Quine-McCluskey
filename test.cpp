@@ -1,9 +1,12 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
+#include<set>
 using namespace std;
 
 
+typedef pair<set<int>, string> pi; // minterms, binary representation
+typedef set<pi> pi_group;
 
 pair<int, int> RowColumn(int literals){
     switch(literals){
@@ -17,11 +20,10 @@ pair<int, int> RowColumn(int literals){
     default:
         return {0,0};
     }
-
 }
 
 
-vector<vector<char>> CreateKmap(vector<int> minterm, int Noliterals){   
+vector<vector<char>> CreateKmap(set<int> minterm, int Noliterals){   
     auto dimensions= RowColumn(Noliterals);  
     const int val[] = {0,1,3,2};                      
     auto row= dimensions.first;
@@ -40,7 +42,7 @@ vector<vector<char>> CreateKmap(vector<int> minterm, int Noliterals){
     return kmap;
 }
 
-void DisplayKmap(vector<int> minterm, int Noliterals){
+void DisplayKmap(set<int> minterm, int Noliterals){
   auto kmap= CreateKmap(minterm, Noliterals);
     for(auto &row: kmap){
         for(auto &cell: row){
@@ -52,6 +54,6 @@ void DisplayKmap(vector<int> minterm, int Noliterals){
 
 int main()
 {
-    DisplayKmap({0,2,3,5,7,8,10,13,15},4);
-    return 0;
+    set<pi_group>
 }
+
